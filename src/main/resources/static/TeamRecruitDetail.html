@@ -1,76 +1,83 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title><%= post.title %> - 팀원 모집</title>
-  <link rel="stylesheet" href="/css/team_recruit_detail.css" />
+  <title th:text="${post.title} + ' - 팀원 모집'">팀원 모집</title>
+  <link rel="stylesheet" th:href="@{/css/team_recruit_detail.css}" />
 </head>
 <body>
 <div class="container">
   <!-- ✅ 사이드바 -->
   <aside class="sidebar">
     <div class="logo-area">
-      <a href="/main">
-        <img src="/images/reallogo 1.png" alt="공공재 로고" class="logo" />
+      <a th:href="@{/main}">
+        <img th:src="@{/images/reallogo 1.png}" alt="공공재 로고" class="logo" />
       </a>
     </div>
 
     <nav>
       <ul class="menu">
-        <li class="<%= currentPath === '/main' || currentPath === '/' ? 'active' : '' %>">
-          <a href="/main" class="menu-item">
+        <!-- 홈 -->
+        <li th:classappend="${currentPath == '/main' or currentPath == '/' ? 'active' : ''}">
+          <a th:href="@{/main}" class="menu-item">
             <div class="left">
-              <img src="/images/<%= currentPath === '/main' || currentPath === '/' ? 'Home_Blue.png' : 'Home.png' %>" class="icon" alt="홈" />
+              <img th:src="@{'/images/' + ((currentPath == '/main' or currentPath == '/') ? 'Home_Blue.png' : 'Home.png')}" class="icon" alt="홈" />
               <span>홈</span>
             </div>
           </a>
         </li>
 
         <!-- 공모전 페이지 -->
-        <li class="dropdown <%= currentPath.startsWith('/recruit') || currentPath === '/contest' ? 'active' : '' %>">
+        <li th:class="'dropdown ' + ((currentPath.startsWith('/recruit') or currentPath == '/contest') ? 'active' : '')">
           <div class="menu-item dropdown-toggle">
             <div class="left">
-              <img src="/images/<%= currentPath.startsWith('/recruit') || currentPath === '/contest' ? 'Trophy_blue.png' : 'Trophy.png' %>" class="icon" alt="공모전" />
-              <span class="<%= currentPath.startsWith('/recruit') || currentPath === '/contest' ? 'submenu-highlight' : '' %>">공모전 페이지</span>
+              <img th:src="@{'/images/' + ((currentPath.startsWith('/recruit') or currentPath == '/contest') ? 'Trophy_blue.png' : 'Trophy.png')}" class="icon" alt="공모전" />
+              <span th:classappend="(currentPath.startsWith('/recruit') or currentPath == '/contest') ? 'submenu-highlight' : ''">공모전 페이지</span>
             </div>
-            <img src="/images/toggle.png" class="arrow-icon" />
+            <img th:src="@{/images/toggle.png}" class="arrow-icon" />
           </div>
           <ul class="submenu">
-            <li><a href="/contest" class="<%= currentPath === '/contest' ? 'active-submenu' : '' %>">공모전 정보</a></li>
-            <li><a href="/recruit" class="<%= currentPath.startsWith('/recruit') ? 'active-submenu' : '' %>">공모전 팀원 모집</a></li>
+            <li>
+              <a th:href="@{/contest}" th:classappend="${currentPath == '/contest'} ? 'active-submenu' : ''">공모전 정보</a>
+            </li>
+            <li>
+              <a th:href="@{/recruit}" th:classappend="${currentPath.startsWith('/recruit')} ? 'active-submenu' : ''">공모전 팀원 모집</a>
+            </li>
           </ul>
         </li>
 
-
+        <!-- 포트폴리오 -->
         <li>
           <div class="menu-item">
             <div class="left">
-              <img src="/images/human.png" class="icon" alt="포트폴리오" />
+              <img th:src="@{/images/human.png}" class="icon" alt="포트폴리오" />
               <span>나의 포트폴리오</span>
             </div>
           </div>
         </li>
 
+        <!-- 커뮤니티 -->
         <li class="dropdown">
           <div class="menu-item dropdown-toggle">
             <div class="left">
-              <img src="/images/Group_human.png" class="icon" alt="커뮤니티" />
+              <img th:src="@{/images/Group_human.png}" class="icon" alt="커뮤니티" />
               <span>커뮤니티</span>
             </div>
-            <img src="/images/toggle.png" class="arrow-icon" />
+            <img th:src="@{/images/toggle.png}" class="arrow-icon" />
           </div>
           <ul class="submenu">
             <li>스터디원 모집</li>
-            <li>Q&A</li>
+            <li>Q&amp;A</li>
             <li>공모전 후기</li>
           </ul>
         </li>
 
+        <!-- 타이머 -->
         <li class="timer-menu">
           <div class="menu-item">
             <div class="left">
-              <img id="timerIcon" src="/images/Timer.png" class="icon" alt="타이머" />
+              <img id="timerIcon" th:src="@{/images/Timer.png}" class="icon" alt="타이머" />
               <span id="timerText">타이머</span>
             </div>
           </div>
@@ -91,8 +98,8 @@
             <div class="timer-controls">
               <input type="text" class="keyword-input" placeholder="키워드" />
               <div class="timer-buttons">
-                <button class="start-btn"><img src="/images/Play.png" alt="시작" /></button>
-                <button class="stop-btn"><img src="/images/Stop circle.png" alt="정지" /></button>
+                <button class="start-btn"><img th:src="@{/images/Play.png}" alt="시작" /></button>
+                <button class="stop-btn"><img th:src="@{/images/Stop circle.png}" alt="정지" /></button>
               </div>
             </div>
           </div>
@@ -106,8 +113,8 @@
     </div>
 
     <div class="logout-section">
-      <button class="logout-btn" onclick="location.href='/logout'">
-        <img src="/images/logOut.png" class="logout-icon" />
+      <button class="logout-btn" th:onclick="|location.href='@{/logout}'|">
+        <img th:src="@{/images/logOut.png}" class="logout-icon" />
         로그아웃
       </button>
     </div>
@@ -115,41 +122,36 @@
   <!-- ✅ 본문 -->
   <main class="main-content">
     <div class="detail-wrapper">
-      <h2 class="post-title"><%= post.title %></h2>
+      <h2 class="post-title" th:text="${post.title}">제목</h2>
 
       <div class="post-meta">
-        <span class="author"><%= post.author %></span>
-        <span class="date"><%= new Date(post.created_at).toLocaleDateString('ko-KR') %></span>
+        <span class="author" th:text="${post.author}">작성자</span>
+        <span class="date" th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">날짜</span>
       </div>
 
-      <% if (post.thumbnail) { %>
-      <div class="post-thumbnail">
-        <img src="<%= post.thumbnail %>" alt="썸네일" />
+      <div class="post-thumbnail" th:if="${post.thumbnail != null}">
+        <img th:src="${post.thumbnail}" alt="썸네일" />
       </div>
-      <% } %>
 
       <div class="post-content">
-        <p><%= post.content %></p>
+        <p th:text="${post.content}">내용</p>
       </div>
 
-      <% if (post.user_id === user.id) { %>
-      <div class="post-actions">
-        <a href="/recruit/<%= post.id %>/edit" class="edit-btn">수정</a>
-
-        <form action="/recruit/<%= post.id %>?_method=DELETE" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?')" style="display:inline;">
+      <div class="post-actions" th:if="${post.userId == user.id}">
+        <a th:href="@{'/recruit/' + ${post.id} + '/edit'}" class="edit-btn">수정</a>
+        <form th:action="@{'/recruit/' + ${post.id}}" method="post"
+              onsubmit="return confirm('정말 삭제하시겠습니까?')" style="display:inline;">
+          <input type="hidden" name="_method" value="DELETE"/>
           <button type="submit" class="delete-btn">삭제</button>
         </form>
       </div>
-      <% } %>
-
-
 
       <div class="back-btn-wrapper">
-        <a href="/recruit" class="back-btn">← 목록으로</a>
+        <a th:href="@{/recruit}" class="back-btn">← 목록으로</a>
       </div>
     </div>
   </main>
 </div>
-<script src="/js/sidebar.js"></script>
+<script th:src="@{/js/sidebar.js}"></script>
 </body>
 </html>

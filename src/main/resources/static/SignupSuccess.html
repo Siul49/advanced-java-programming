@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>회원가입 성공</title>
-    <link rel="stylesheet" href="/css/signup.css">
+    <title th:text="${title}">회원가입 성공</title>
+    <link rel="stylesheet" th:href="@{/css/signup.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         .success-container {
@@ -55,23 +55,24 @@
 </head>
 <body>
 <div class="success-container">
-    <img src="/images/reallogo 1.png" alt="공공재 로고" class="logo-img" id="mainLogo">
+    <img th:src="@{/images/reallogo 1.png}" alt="공공재 로고" class="logo-img" id="mainLogo">
 
     <div class="success-title">회원가입 성공</div>
     <div class="check-icon"><i class="fa-solid fa-circle-check"></i></div>
     <p class="success-message">
-        <strong><%= name %> (<%= email %>)</strong>님의 회원가입이<br>
+        <strong th:text="${name}"></strong>
+        (<span th:text="${email}"></span>)님의 회원가입이<br>
         성공적으로 완료되었습니다.
     </p>
-    <a href="/login"><button class="login-btn">로그인 하기</button></a>
+    <a th:href="@{/login}"><button class="login-btn">로그인 하기</button></a>
 </div>
 
-<script>
+<script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", () => {
         const mainLogo = document.getElementById("mainLogo");
         if (mainLogo) {
             mainLogo.addEventListener("click", () => {
-                window.location.href = "/";
+                window.location.href = /*[[@{/}]]*/ '/';
             });
         }
     });

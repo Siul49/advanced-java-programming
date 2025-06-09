@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>공공재 회원가입</title>
-    <link rel="stylesheet" href="/css/signUp.css">
+    <title th:text="${title}">공공재 회원가입</title>
+    <link rel="stylesheet" th:href="@{/css/signUp.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 <div class="signup-container">
-    <img src="/images/reallogo 1.png" alt="공공재 로고" class="logo-img" id="mainLogo">
+    <img th:src="@{/images/reallogo 1.png}" alt="공공재 로고" class="logo-img" id="mainLogo">
     <h2>회원가입</h2>
 
-    <form class="signup-form" method="POST" action="/signup">
+    <!-- th:action, th:method로 Spring에서 POST 처리 -->
+    <form class="signup-form" th:action="@{/signup}" method="post">
         <label for="id">아이디</label>
         <input type="text" name="id" id="id" placeholder="아이디를 입력하세요" required>
 
@@ -21,13 +22,13 @@
         <label for="nickname">닉네임</label>
         <div class="field-with-button">
             <input type="text" name="nickname" id="nickname" placeholder="닉네임을 입력하세요" required>
-            <button type="button" class="check-btn">중복 확인</button>
+            <button type="button" class="check-btn" id="checkNicknameBtn">중복 확인</button>
         </div>
 
         <label for="email">이메일</label>
         <div class="field-with-button">
             <input type="email" name="email" id="email" placeholder="이메일을 입력하세요" required>
-            <button type="button" class="check-btn">중복 확인</button>
+            <button type="button" class="check-btn" id="checkEmailBtn">중복 확인</button>
         </div>
 
         <label for="password">비밀번호</label>
@@ -46,7 +47,8 @@
     </form>
 </div>
 
-<script>
+<script th:inline="javascript">
+    // 비밀번호 보기/숨기기 토글
     function togglePassword(id, icon) {
         const input = document.getElementById(id);
         if (input.type === "password") {
@@ -61,47 +63,58 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+        // 로고 클릭 시 메인 이동
         const mainLogo = document.getElementById("mainLogo");
         if (mainLogo) {
             mainLogo.addEventListener("click", () => {
-                window.location.href = "/";
+                window.location.href = /*[[@{/}]]*/ '/';
             });
         }
-    });
 
-
-
-    // 중복 확인 버튼 클릭
-    document.querySelectorAll('.check-btn').forEach(button => {
-        button.addEventListener('click', async () => {
-            const input = button.previousElementSibling;
-            const type = input.name; // nickname 또는 email
+        // 닉네임 중복 확인
+        document.getElementById('checkNicknameBtn').addEventListener('click', async () => {
+            const input = document.getElementById('nickname');
             const value = input.value.trim();
-
             if (!value) {
                 alert('값을 입력해주세요.');
                 return;
             }
-
-            const url = type === 'nickname'
-                ? `/check-nickname?nickname=${encodeURIComponent(value)}`
-                : `/check-email?email=${encodeURIComponent(value)}`;
-
+            const url = /*[[@{/check-nickname(nickname=${value})}]]*/ `/check-nickname?nickname=${encodeURIComponent(value)}`;
             try {
                 const res = await fetch(url);
                 const data = await res.json();
-
                 if (data.exists) {
-                    alert(`${type === 'nickname' ? '닉네임' : '이메일'}이 이미 존재합니다.`);
+                    alert('닉네임이 이미 존재합니다.');
                 } else {
-                    alert(`사용 가능한 ${type === 'nickname' ? '닉네임' : '이메일'}입니다.`);
+                    alert('사용 가능한 닉네임입니다.');
+                }
+            } catch (err) {
+                alert('서버 오류가 발생했습니다.');
+            }
+        });
+
+        // 이메일 중복 확인
+        document.getElementById('checkEmailBtn').addEventListener('click', async () => {
+            const input = document.getElementById('email');
+            const value = input.value.trim();
+            if (!value) {
+                alert('값을 입력해주세요.');
+                return;
+            }
+            const url = /*[[@{/check-email(email=${value})}]]*/ `/check-email?email=${encodeURIComponent(value)}`;
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data.exists) {
+                    alert('이메일이 이미 존재합니다.');
+                } else {
+                    alert('사용 가능한 이메일입니다.');
                 }
             } catch (err) {
                 alert('서버 오류가 발생했습니다.');
             }
         });
     });
-
 </script>
 </body>
 </html>
