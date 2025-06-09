@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="signup-container">
-    <img th:src="@{/images/reallogo 1.png}" alt="공공재 로고" class="logo-img" id="mainLogo">
+    <img th:src="@{/css/images/reallogo.png}" alt="공공재 로고" class="logo-img" id="mainLogo">
     <h2>회원가입</h2>
 
     <!-- th:action, th:method로 Spring에서 POST 처리 -->
@@ -16,6 +16,7 @@
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <label for="id">아이디</label>
         <input type="text" name="accountId" id="id" placeholder="아이디를 입력하세요" required>
+
 
         <label for="name">이름</label>
         <input type="text" name="name" id="name" placeholder="이름을 입력하세요" required>
@@ -53,10 +54,33 @@
     document.querySelector('form').addEventListener('submit', (e) => {
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
+        const errorSpan = document.getElementById('passwordError');
 
+        if (!validatePassword(password)) {
+            e.preventDefault();
+            errorSpan.textContent = "영문, 숫자, 특수문자를 포함한 8~20자로 입력해주세요.";
+            document.getElementById('password').focus();
+        }
         if (password !== confirmPassword) {
             e.preventDefault();
             alert('비밀번호가 일치하지 않습니다.');
+        }
+    });
+
+    // 정규식: 영문, 숫자, 특수문자 포함 8~20자
+    function validatePassword(password) {
+        const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
+        return regex.test(password);
+    }
+
+    // 실시간 입력 검증
+    document.getElementById('password').addEventListener('input', function() {
+        const password = this.value;
+        const errorSpan = document.getElementById('passwordError');
+        if (!validatePassword(password)) {
+            errorSpan.textContent = "영문, 숫자, 특수문자를 포함한 8~20자로 입력해주세요.";
+        } else {
+            errorSpan.textContent = "";
         }
     });
 

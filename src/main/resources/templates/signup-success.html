@@ -55,13 +55,13 @@
 </head>
 <body>
 <div class="success-container">
-    <img th:src="@{/images/reallogo 1.png}" alt="공공재 로고" class="logo-img" id="mainLogo">
+    <img th:src="@{/css/images/reallogo.png}" alt="공공재 로고" class="logo-img" id="mainLogo">
 
     <div class="success-title">회원가입 성공</div>
     <div class="check-icon"><i class="fa-solid fa-circle-check"></i></div>
     <p class="success-message">
-        <strong th:text="${name}"></strong>
-        (<span th:text="${email}"></span>)님의 회원가입이<br>
+        <strong th:text="${name}">김경수</strong>
+        (<span th:text="${email}">kksu149@naver.com</span>)님의 회원가입이<br>
         성공적으로 완료되었습니다.
     </p>
     <a th:href="@{/login}"><button class="login-btn">로그인 하기</button></a>

@@ -1,0 +1,154 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: white;
+  border-right: 1px solid #ddd;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: none;
+  scrollbar-width: none;
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f9f9f9;
+}
+
+.logo-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1px;
+}
+
+.logo-area img.logo {
+  width: 180px;
+  height: auto;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+}
+
+.menu a {
+  text-decoration: none;
+}
+
+.menu li {
+  margin-bottom: 0.7rem;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.menu-item .left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-item span {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}
+
+.arrow-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s;
+}
+
+.submenu {
+  display: none;
+  list-style: none;
+  padding-left: 1.8rem;
+  margin: 6px 0 10px 0;
+  font-size: 0.92rem;
+  color: #666;
+}
+
+.dropdown.open .submenu {
+  display: block;
+}
+
+.submenu li {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+/* ✅ 현재 선택된 메뉴 */
+.menu li.active .menu-item {
+  background-color: #f0f0f0;
+  border-radius: 6px;
+}
+
+.menu li.active .menu-item span {
+  color: #2C8FB9;
+  font-weight: 600;
+}
+
+.menu li.active .icon {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(99%) saturate(746%) hue-rotate(195deg) brightness(95%) contrast(97%);
+}
+
+/* 로그아웃 */
+.logout-section {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #444;
+  font-size: 1rem;
+  padding: 8px 4px;
+  width: 100%; /* ✅ 부모 영역 채우게 함 */
+  justify-content: flex-start;
+}
+
+.logout-btn:hover {
+  background-color: #f0f0f0;
+  border-radius: 6px;
+}
+
+.logout-icon {
+  width: 20px;
+  height: 20px;
+}
+

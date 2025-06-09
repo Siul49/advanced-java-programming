@@ -1,4 +1,4 @@
-package com.example.advancedJavaProgramming.controller;
+package com.example.advancedJavaProgramming.controller.auth;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,4 +16,5 @@ public class LoginController {
         model.addAttribute("title", "공공재 로그인");
         return "login";
     }
+
 }
