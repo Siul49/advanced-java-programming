@@ -23,7 +23,7 @@
                 <li th:classappend="${currentPage} == 'home' ? 'active' : ''">
                     <a th:href="@{/main}" class="menu-item">
                         <div class="left">
-                            <img th:src="@{'/images/' + (${currentPage} == 'home' ? 'Home_Blue.png' : 'Home.png')}" class="icon" alt="홈" />
+                            <img th:src="@{'/images/' + ${currentPage == 'home' ? 'Home_Blue.png' : 'Home.png'}}" class="icon" alt="홈" />
                             <span>홈</span>
                         </div>
                     </a>
@@ -35,7 +35,7 @@
                             <img th:src="@{/images/Trophy.png}" class="icon" alt="공모전" />
                             <span>공모전 페이지</span>
                         </div>
-                        <img th:src="@{/images/toggle.png}" class="arrow-icon" />
+                        <img th:src="@{/images/toggle.png}" class="arrow-icon"  alt=""/>
                     </div>
                     <ul class="submenu">
                         <li><a th:href="@{/recruit_info}" style="text-decoration: none; color: inherit;">공모전 정보</a></li>
@@ -46,7 +46,7 @@
                 <li th:classappend="${currentPage} == 'portfolio' ? 'active' : ''">
                     <div class="menu-item">
                         <div class="left">
-                            <img th:src="@{'/images/' + (${currentPage} == 'portfolio' ? 'human_blue.png' : 'human.png')}" class="icon" alt="포트폴리오" />
+                            <img th:src="@{'/images/' + ${currentPage == 'portfolio' ? 'human_blue.png' : 'human.png'}}" class="icon" alt="포트폴리오" />
                             <span>나의 포트폴리오</span>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                             <img th:src="@{/images/Group_human.png}" class="icon" alt="커뮤니티" />
                             <span>커뮤니티</span>
                         </div>
-                        <img th:src="@{/images/toggle.png}" class="arrow-icon" />
+                        <img th:src="@{/images/toggle.png}" class="arrow-icon" alt=""/>
                     </div>
                     <ul class="submenu">
                         <li>스터디원 모집</li>
@@ -70,7 +70,7 @@
                 <li class="timer-menu" th:classappend="${currentPage} == 'timer' ? 'active' : ''">
                     <div class="menu-item">
                         <div class="left">
-                            <img id="timerIcon" th:src="@{'/images/' + (${currentPage} == 'timer' ? 'Timer_blue.png' : 'Timer.png')}" class="icon" alt="타이머" />
+                            <img id="timerIcon" th:src="@{'/images/' + ${currentPage == 'timer' ? 'Timer_blue.png' : 'Timer.png'}}" class="icon" alt="타이머" />
                             <span id="timerText">타이머</span>
                         </div>
                     </div>
@@ -89,7 +89,9 @@
                         </div>
 
                         <div class="timer-controls">
-                            <input type="text" class="keyword-input" placeholder="키워드" />
+                            <label>
+                                <input type="text" class="keyword-input" placeholder="키워드" />
+                            </label>
                             <div class="timer-buttons">
                                 <button class="start-btn"><img th:src="@{/images/Play.png}" alt="시작" /></button>
                                 <button class="stop-btn"><img th:src="@{/images/Stop circle.png}" alt="정지" /></button>
@@ -107,7 +109,7 @@
 
         <div class="logout-section">
             <button class="logout-btn" aria-label="로그아웃">
-                <img th:src="@{/images/logOut.png}" class="logout-icon" />
+                <img th:src="@{/images/logOut.png}" class="logout-icon" alt=""/>
                 로그아웃
             </button>
         </div>

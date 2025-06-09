@@ -22,7 +22,7 @@
         <li th:classappend="${currentPath == '/main' or currentPath == '/' ? 'active' : ''}">
           <a th:href="@{/main}" class="menu-item">
             <div class="left">
-              <img th:src="@{'/images/' + ((currentPath == '/main' or currentPath == '/') ? 'Home_Blue.png' : 'Home.png')}" class="icon" alt="홈" />
+              <img th:src="@{'/images/' + ${((currentPath == '/main' or currentPath == '/') ? 'Home_Blue.png' : 'Home.png')}}" class="icon" alt="홈" />
               <span>홈</span>
             </div>
           </a>
@@ -32,10 +32,10 @@
         <li th:class="'dropdown ' + ((currentPath.startsWith('/recruit') or currentPath == '/contest') ? 'active' : '')">
           <div class="menu-item dropdown-toggle">
             <div class="left">
-              <img th:src="@{'/images/' + ((currentPath.startsWith('/recruit') or currentPath == '/contest') ? 'Trophy_blue.png' : 'Trophy.png')}" class="icon" alt="공모전" />
+              <img th:src="@{'/images/' + ${((currentPath.startsWith('/recruit') or currentPath == '/contest') ? 'Trophy_blue.png' : 'Trophy.png')}}" class="icon" alt="공모전" />
               <span th:classappend="(currentPath.startsWith('/recruit') or currentPath == '/contest') ? 'submenu-highlight' : ''">공모전 페이지</span>
             </div>
-            <img th:src="@{/images/toggle.png}" class="arrow-icon" />
+            <img th:src="@{/images/toggle.png}" class="arrow-icon" alt=""/>
           </div>
           <ul class="submenu">
             <li>
@@ -64,7 +64,7 @@
               <img th:src="@{/images/Group_human.png}" class="icon" alt="커뮤니티" />
               <span>커뮤니티</span>
             </div>
-            <img th:src="@{/images/toggle.png}" class="arrow-icon" />
+            <img th:src="@{/images/toggle.png}" class="arrow-icon" alt="" />
           </div>
           <ul class="submenu">
             <li>스터디원 모집</li>
@@ -96,7 +96,9 @@
             </div>
 
             <div class="timer-controls">
-              <input type="text" class="keyword-input" placeholder="키워드" />
+              <label>
+                <input type="text" class="keyword-input" placeholder="키워드" />
+              </label>
               <div class="timer-buttons">
                 <button class="start-btn"><img th:src="@{/images/Play.png}" alt="시작" /></button>
                 <button class="stop-btn"><img th:src="@{/images/Stop circle.png}" alt="정지" /></button>
@@ -114,7 +116,7 @@
 
     <div class="logout-section">
       <button class="logout-btn" th:onclick="|location.href='@{/logout}'|">
-        <img th:src="@{/images/logOut.png}" class="logout-icon" />
+        <img th:src="@{/images/logOut.png}" class="logout-icon" alt="" />
         로그아웃
       </button>
     </div>

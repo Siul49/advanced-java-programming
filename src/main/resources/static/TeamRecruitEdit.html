@@ -21,7 +21,7 @@
                 <li th:classappend="${currentPath == '/main' or currentPath == '/' ? 'active' : ''}">
                     <a th:href="@{/main}" class="menu-item">
                         <div class="left">
-                            <img th:src="@{'/images/' + ((currentPath == '/main' or currentPath == '/') ? 'Home_Blue.png' : 'Home.png')}" class="icon" alt="홈" />
+                            <img th:src="@{'/images/' + ${((currentPath == '/main' or currentPath == '/') ? 'Home_Blue.png' : 'Home.png')}}" class="icon" alt="홈" />
                             <span>홈</span>
                         </div>
                     </a>
@@ -31,7 +31,7 @@
                 <li th:class="'dropdown ' + ((currentPath.startsWith('/recruit') or currentPath == '/contest') ? 'active' : '')">
                     <div class="menu-item dropdown-toggle">
                         <div class="left">
-                            <img th:src="@{'/images/' + ((currentPath.startsWith('/recruit') or currentPath == '/contest') ? 'Trophy_blue.png' : 'Trophy.png')}" class="icon" alt="공모전" />
+                            <img th:src="@{'/images/' + ${((currentPath.startsWith('/recruit') or currentPath == '/contest') ? 'Trophy_blue.png' : 'Trophy.png')}}" class="icon" alt="공모전" />
                             <span th:classappend="(currentPath.startsWith('/recruit') or currentPath == '/contest') ? 'submenu-highlight' : ''">공모전 페이지</span>
                         </div>
                         <img th:src="@{/images/toggle.png}" class="arrow-icon" />
