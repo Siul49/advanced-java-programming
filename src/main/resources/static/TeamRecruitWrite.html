@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>팀원 모집 글쓰기</title>
+
+  <link rel="stylesheet" href="/css/team_recruit_write.css" />
+</head>
+<body>
+<div class="container">
+  <!-- ✅ 사이드바 -->
+  <aside class="sidebar">
+    <div class="logo-area">
+      <a href="/main">
+        <img src="/images/reallogo 1.png" alt="공공재 로고" class="logo" />
+      </a>
+    </div>
+
+    <nav>
+      <ul class="menu">
+        <li class="<%= currentPath === '/main' || currentPath === '/' ? 'active' : '' %>">
+          <a href="/main" class="menu-item">
+            <div class="left">
+              <img src="/images/<%= currentPath === '/main' || currentPath === '/' ? 'Home_Blue.png' : 'Home.png' %>" class="icon" alt="홈" />
+              <span>홈</span>
+            </div>
+          </a>
+        </li>
+
+        <!-- 공모전 페이지 -->
+        <li class="dropdown <%= currentPath.startsWith('/recruit') || currentPath === '/contest' ? 'active' : '' %>">
+          <div class="menu-item dropdown-toggle">
+            <div class="left">
+              <img src="/images/<%= currentPath.startsWith('/recruit') || currentPath === '/contest' ? 'Trophy_blue.png' : 'Trophy.png' %>" class="icon" alt="공모전" />
+              <span class="<%= currentPath.startsWith('/recruit') || currentPath === '/contest' ? 'submenu-highlight' : '' %>">공모전 페이지</span>
+            </div>
+            <img src="/images/toggle.png" class="arrow-icon" />
+          </div>
+          <ul class="submenu">
+            <li><a href="/contest" class="<%= currentPath === '/contest' ? 'active-submenu' : '' %>">공모전 정보</a></li>
+            <li><a href="/recruit" class="<%= currentPath.startsWith('/recruit') ? 'active-submenu' : '' %>">공모전 팀원 모집</a></li>
+          </ul>
+        </li>
+
+
+        <li>
+          <div class="menu-item">
+            <div class="left">
+              <img src="/images/human.png" class="icon" alt="포트폴리오" />
+              <span>나의 포트폴리오</span>
+            </div>
+          </div>
+        </li>
+
+        <li class="dropdown">
+          <div class="menu-item dropdown-toggle">
+            <div class="left">
+              <img src="/images/Group_human.png" class="icon" alt="커뮤니티" />
+              <span>커뮤니티</span>
+            </div>
+            <img src="/images/toggle.png" class="arrow-icon" />
+          </div>
+          <ul class="submenu">
+            <li>스터디원 모집</li>
+            <li>Q&A</li>
+            <li>공모전 후기</li>
+          </ul>
+        </li>
+
+        <li class="timer-menu">
+          <div class="menu-item">
+            <div class="left">
+              <img id="timerIcon" src="/images/Timer.png" class="icon" alt="타이머" />
+              <span id="timerText">타이머</span>
+            </div>
+          </div>
+
+          <div class="timer-layout">
+            <div class="timer-blocks">
+              <div class="time-group">
+                <div class="time-cell" id="minuteTens">0</div>
+                <div class="time-cell" id="minuteOnes">0</div>
+              </div>
+              <div class="colon">:</div>
+              <div class="time-group">
+                <div class="time-cell" id="secondTens">0</div>
+                <div class="time-cell" id="secondOnes">0</div>
+              </div>
+            </div>
+
+            <div class="timer-controls">
+              <input type="text" class="keyword-input" placeholder="키워드" />
+              <div class="timer-buttons">
+                <button class="start-btn"><img src="/images/Play.png" alt="시작" /></button>
+                <button class="stop-btn"><img src="/images/Stop circle.png" alt="정지" /></button>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="recent-section">
+      <div class="recent-title">최근 학습</div>
+      <div class="recent-graph" id="recentGraph"></div>
+    </div>
+
+    <div class="logout-section">
+      <button class="logout-btn" onclick="location.href='/logout'">
+        <img src="/images/logOut.png" class="logout-icon" />
+        로그아웃
+      </button>
+    </div>
+  </aside>
+
+  <!-- ✅ 본문 -->
+  <main class="main-content">
+    <div class="write-wrapper">
+      <h2>팀원 모집 글 작성</h2>
+
+      <form action="/recruit/write" method="POST" enctype="multipart/form-data" class="write-form">
+        <label for="title">제목</label>
+        <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required />
+
+        <label for="content">내용</label>
+        <textarea id="content" name="content" placeholder="내용을 입력하세요" rows="8" required></textarea>
+
+        <label for="thumbnail">이미지</label>
+        <input type="file" id="thumbnail" name="thumbnail" accept="image/*" />
+
+        <button type="submit" class="submit-btn">등록하기</button>
+      </form>
+    </div>
+  </main>
+
+</div>
+<script src="/js/sidebar.js"></script>
+</body>
+</html>
