@@ -31,11 +31,13 @@ public class SignupController {
 
     @PostMapping("/signup")
     public String signupSubmit(
-            @Valid @ModelAttribute User user,
-            @RequestParam("confirm-password") String confirmPassword,
-            BindingResult bindingResult,
-            Model model,
-            RedirectAttributes redirectAttributes) {
+        @Valid @ModelAttribute User user,
+        @RequestParam("confirm-password") String confirmPassword,
+        BindingResult bindingResult,
+        Model model,
+        RedirectAttributes redirectAttributes) {
+
+        System.out.println("confirmPassword: " + confirmPassword);
 
         // 1. 비밀번호 일치 검증
         if (!user.getPassword().equals(confirmPassword)) {

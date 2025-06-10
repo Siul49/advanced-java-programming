@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/community.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}"/>
+    <script defer th:src="@{/js/community.js}"></script>
+    <title>Community</title>
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="logo-area">
+            <!-- ✅ 이미지 경로 수정 -->
+            <img th:src="@{/images/reallogo.png}" alt="공공재 로고" class="logo" id="mainLogo" />
+        </div>
+        <button class="btn login" id="loginBtn">로그인</button>
+        <button class="btn signup" id="signUpBtn">회원가입</button>
+    </aside>
+
+    <main class="main-content">
+        <header class="title-wrapper">
+            <h1 class="page-title"><strong>Community</strong></h1>
+        </header>
+
+        <div class="divider">
+            <hr class="divider" />
+        </div>
+
+        <div class="card-container">
+            <div th:each="post : ${posts}" class="card" th:onclick="'location.href=\'/community/' + ${post._id} + '\''">
+                <img th:if="${post.image != null}" th:src="@{${post.image}}" class="card-img-top" alt="Card image" />
+                <div th:if="${post.image == null}" class="card-tag-placeholder" th:text="${post.category}"></div>
+
+                <div class="card-body">
+                    <div class="card-header">
+                        <h5 class="card-title" th:text="${post.title}"></h5>
+                        <div class="card-tags">
+                            <span class="tag" th:text="'#' + ${post.category}"></span>
+                        </div>
+                    </div>
+                    <p class="card-text" th:text="${#strings.replace(post.content, '\r\n', ' ')}"></p>
+                    <div class="card-meta">
+                        <span class="card-date" th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd')}"></span>
+                        <span class="card-author" th:text="'작성자: ' + ${post.author}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+            <a th:if="${currentPage > 1}" th:href="@{/?page={p}(p=${currentPage - 1})}" class="page-arrow">&laquo;</a>
+            <span th:if="${currentPage <= 1}" class="page-arrow disabled">&laquo;</span>
+
+            <a th:each="i : ${#numbers.sequence(1, totalPages)}"
+               th:href="@{/?page={p}(p=${i})}"
+               th:classappend="${currentPage == i} ? 'active' : ''"
+               th:text="${i}"></a>
+
+            <a th:if="${currentPage < totalPages}" th:href="@{/?page={p}(p=${currentPage + 1})}" class="page-arrow">&raquo;</a>
+            <span th:if="${currentPage >= totalPages}" class="page-arrow disabled">&raquo;</span>
+        </div>
+
+        <div class="button-floating">
+            <button class="floating-btn menu-btn" data-title="Contet Member Recruitment">스터디원 모집</button>
+            <button class="floating-btn menu-btn" data-title="Q&A">Q&A</button>
+            <button class="floating-btn menu-btn" data-title="Contet Review">공모전 후기</button>
+            <a th:href="@{/community_write}" class="write-btn">글쓰기</a>
+        </div>
+    </main>
+</div>
+
+<footer>
+    <p style="text-align: right">&copy; 2025 공공재 커뮤니티</p>
+</footer>
+</body>
+</html>

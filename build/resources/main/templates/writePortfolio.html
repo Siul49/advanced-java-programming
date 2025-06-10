@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공공재 메인페이지</title>
+    <!-- ✅ CSS 경로 (웹 루트 기준) -->
+    <link rel="stylesheet" th:href="@{/css/portfolio_edit.css}">
+    <!-- ✅ JS 경로 (웹 루트 기준) -->
+    <script defer th:src="@{/js/main(LogX).js}"></script>
+</head>
+<body>
+<div class="container">
+    <!-- 비로그인 상태일 때 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <img th:src="@{/images/reallogo.png}" alt="공공재 로고" class="logo" id="mainLogoAnonymous"/>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="portfolio-header">
+            <div class="inner-container">
+                <h1>Portfolio</h1>
+            </div>
+        </div>
+
+        <div class="portfolio-body">
+            <div class="user-info">
+                <div class="user-text">
+                    <input class="name-input" type="text" placeholder="이름을 입력하세요" th:value="${name} ?: ''" />
+                    <div class="about-box">
+                        <p class="about-title">about me</p>
+                        <textarea class="about-textarea" placeholder="본인을 소개해주세요!" th:text="${about} ?: ''"></textarea>
+                    </div>
+                </div>
+
+                <div class="user-photo-skill">
+                    <form id="profileForm" enctype="multipart/form-data">
+                        <div class="photo-box" onclick="document.getElementById('profileInput').click()">
+                            <img th:if="${profileImage != null}" id="profilePreview" th:src="@{'/uploads/' + ${profileImage}}" alt="프로필 이미지"/>
+                            <img th:if="${profileImage == null}" id="profilePreview2" src="" alt="프로필 이미지" style="display: none;" />
+                            <div th:if="${profileImage == null}" id="photoPlaceholder" class="photo-placeholder">+</div>
+                            <input type="file" id="profileInput" name="profileImage" accept="image/*" style="display: none;" />
+                        </div>
+                    </form>
+
+                    <div class="skills-section">
+                        <div class="skills" id="skillList">
+                            <div th:if="${skills != null and !skills.isEmpty()}" th:each="skill : ${skills}" class="skill-button" th:style="'background-color:' + ${skill.color}">
+                                <input type="text" class="skill-input" th:value="${skill.name}" />
+                                <input type="color" class="color-picker" th:value="${skill.color}" />
+                            </div>
+                        </div>
+                        <button class="add-skill-button" onclick="addSkill()">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <section class="project-add-section">
+                <div id="project-card-container">
+                    <div th:if="${projects != null and !projects.isEmpty()}" th:each="project : ${projects}" class="project-added-card show">
+                        <div class="project-label">
+                            <input type="text" class="project-title-input" th:value="${project.title}" />
+                            <p class="project-delete">X</p>
+                        </div>
+                        <hr class="project-divider" />
+                        <div class="project-detail">
+                            <textarea class="project-description" th:text="${project.description}"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-add-button" onclick="addProjectCard()">
+                    <div class="project-label">새 프로젝트 추가</div>
+                    <hr class="project-divider" />
+                    <div class="project-add-card">
+                        <div class="plus-icon">+</div>
+                    </div>
+                </div>
+            </section>
+
+            <div style="text-align: right; margin: 0 0;">
+                <button class="btn save" id="saveBtn">수정 완료</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/portfolio_edit.js}"></script>
+</body>
+</html>
