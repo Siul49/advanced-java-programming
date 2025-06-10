@@ -24,7 +24,7 @@ public class SecurityConfig {
         http
                 .userDetailsService(customUserDetailsService)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/portfolio","/main" ,"/signup-success", "/signup", "/check-nickname", "/check-email", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/login","/main","/contest","/savePortfolio", "/signup", "/check-nickname", "/check-email", "/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -32,7 +32,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login") // 폼이 POST로 던지는 URL
                         .usernameParameter("email") // 폼에서 이메일로 로그인
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/writePortfolio", true)
+                        .defaultSuccessUrl("/portfolio", true)
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )

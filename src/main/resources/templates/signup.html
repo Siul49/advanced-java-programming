@@ -11,7 +11,6 @@
     <img th:src="@{/css/images/reallogo.png}" alt="공공재 로고" class="logo-img" id="mainLogo">
     <h2>회원가입</h2>
 
-    <!-- th:action, th:method로 Spring에서 POST 처리 -->
     <form class="signup-form" th:action="@{/signup}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <label for="id">아이디</label>

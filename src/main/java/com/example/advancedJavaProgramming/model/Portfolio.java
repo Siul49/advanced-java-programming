@@ -1,5 +1,6 @@
 package com.example.advancedJavaProgramming.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -10,11 +11,12 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @Document(collection = "user_portfolio")
 public class Portfolio {
 
     @Id
-    private String _id; // MongoDB에서 자동 생성된 ObjectId
+    private String _id;
     private String userId;
 
     private String name;
@@ -32,16 +34,14 @@ public class Portfolio {
     @Setter
     @Getter
     public static class Project {
-        // getters/setters
-        private String title;
-        private String description;
+        public String title;
+        public String description;
     }
 
-    // ✅ 중첩 클래스: Skill
     @Setter
     @Getter
     public static class Skill {
-        private String name;
-        private String color;
+        public String name;
+        public String color;
     }
 }

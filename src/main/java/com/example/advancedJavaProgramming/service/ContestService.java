@@ -3,7 +3,6 @@ package com.example.advancedJavaProgramming.service;
 import com.example.advancedJavaProgramming.repository.ContestRepository;
 import com.example.advancedJavaProgramming.model.Contest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +12,7 @@ import java.util.stream.Collectors;
 @Service
 public class ContestService {
 
-    @Autowired
     private ContestRepository contestRepository;
-
-    // 추천 공모전 3개 (조회수 기준)
-    public List<Map<String, Object>> getRecommendedContests() {
-        List<Contest> contests = contestRepository.findAll(Sort.by(Sort.Direction.DESC, "read_count"))
-                .stream().limit(3).collect(Collectors.toList());
-        return enrichContestData(contests);
-    }
 
     // 전체 공모전
     public List<Map<String, Object>> getAllContests() {
@@ -63,8 +54,8 @@ public class ContestService {
             Map<String, Object> map = new HashMap<>();
             map.put("id", contest.getId());
             map.put("title", contest.getTitle());
-            map.put("img_src", contest.getImg_src());
-            map.put("read_count", contest.getRead_count());
+            map.put("img_src", contest.getImgSrc());
+            map.put("read_count", contest.getReadCount());
             map.put("info", contest.getInfo());
             map.put("dday", calculateDday(contest.getInfo().get("접수마감일")));
             map.put("prize", contest.getInfo().get("총 상금"));

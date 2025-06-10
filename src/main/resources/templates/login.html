@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}">공공재 로그인</title>
-    <!-- ✅ CSS 경로 (웹 루트 기준) -->
     <link rel="stylesheet" th:href="@{/css/login.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 <div class="login-container">
-    <!-- ✅ 이미지 경로 -->
     <img th:src="@{/images/reallogo.png}" alt="공공재 로고" class="logo-img" id="mainLogo">
 
     <form class="login-form" id="loginForm" th:action="@{/login}" method="post">
@@ -55,7 +53,7 @@
 
         // 로그인 처리 (서버 단에서 POST 처리, JS 필요 없음)
         document.getElementById('loginForm').addEventListener('submit', function (e) {
-            // 클라이언트 JS 처리 필요 없으면 비워둬도 돼
+
         });
     });
 </script>

@@ -70,15 +70,15 @@ function updateContestHtml(container, contests){
 }
 
 // ✅ 문서 준비되면
-$(document).ready(function(){
+$(document).ready(function () {
     $('#keyword_search_box').hide();
     // 카드 flip
-    $(document).on('click', '.card_wrapper', function(){
+    $(document).on('click', '.card_wrapper', function () {
         $(this).toggleClass('flipped');
     });
 
     // 버튼 클릭
-    $(document).on('click', '.filter_btn', function(){
+    $(document).on('click', '.filter_btn', function () {
         const filterType = $(this).data('filter');
         console.log('✅ 버튼 클릭됨:', filterType);
 

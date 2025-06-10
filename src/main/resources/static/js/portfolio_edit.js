@@ -1,50 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const loginBtn = document.getElementById("loginBtn");
-  const signUpBtn = document.getElementById("signUpBtn");
-  const contestBtn = document.getElementById("contestBtn");
-  const studyBtn = document.getElementById("studyBtn");
-  const mainLogo = document.getElementById("mainLogo");
-
-  if (loginBtn) {
-    loginBtn.addEventListener("click", () => {
-      window.location.href = "/login";
-    });
-  }
-
-  if (signUpBtn) {
-    signUpBtn.addEventListener("click", () => {
-      window.location.href = "/signUp";
-    });
-  }
-
-  if (contestBtn) {
-    contestBtn.addEventListener("click", () => {
-      window.location.href = "/login";
-    });
-  }
-
-  if (studyBtn) {
-    studyBtn.addEventListener("click", () => {
-      window.location.href = "/login";
-    });
-  }
-
-  if (mainLogo) {
-    mainLogo.addEventListener("click", () => {
-      window.location.href = "/";
-    });
-  }
-
-  document.querySelectorAll('.project-delete').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const wrapper = e.target.closest('.project-added-card');
-      if (wrapper) {
-        wrapper.remove();
-      }
-    });
-  });
-});
-
 const fileInput = document.getElementById("profileInput");
 const preview = document.getElementById("profilePreview");
 const placeholder = document.getElementById("photoPlaceholder");
@@ -135,33 +88,27 @@ function addProjectCard() {
   });
 }
 
-
-// 1. '수정 완료' 버튼 클릭 이벤트 등록
 document.getElementById('saveBtn').addEventListener('click', function () {
-  // 2. 입력값 수집
-  const userId = document.querySelector('input[name="userId"]')?.value || document.getElementById('profileForm').userId?.value;
-  const name = document.querySelector('.name-input').value;
-  const about = document.querySelector('.about-textarea').value;
+  // 1️⃣ 입력값 수집
+  const name = document.querySelector('.name-input')?.value || '';
+  const about = document.querySelector('.about-textarea')?.value || '';
 
-  // 3. skills 수집
-  const skillElements = document.querySelectorAll('.skill-button');
-  const skills = [];
-  skillElements.forEach(skillEl => {
-    const skillName = skillEl.querySelector('.skill-input').value;
-    const skillColor = skillEl.querySelector('.color-picker').value;
-    skills.push({ name: skillName, color: skillColor });
-  });
+  // 2️⃣ skills 수집
+  const skills = Array.from(document.querySelectorAll('.skill-button')).map(skillEl => ({
+    name: skillEl.querySelector('.skill-input')?.value || '',
+    color: skillEl.querySelector('.color-picker')?.value || '#000000'
+  }));
 
-  // 4. projects 수집
-  const projectElements = document.querySelectorAll('.project-added-card');
-  const projects = [];
-  projectElements.forEach(projectEl => {
-    const title = projectEl.querySelector('.project-title-input').value;
-    const description = projectEl.querySelector('.project-description').value;
-    projects.push({ title, description });
-  });
+  // 3️⃣ projects 수집
+  const projects = Array.from(document.querySelectorAll('.project-added-card')).map(projectEl => ({
+    title: projectEl.querySelector('.project-title-input')?.value || '',
+    description: projectEl.querySelector('.project-description')?.value || ''
+  }));
 
-  // 5. FormData 생성 (파일 업로드 포함)
+  // 4️⃣ userId 수집 (폼 내부에 있다고 가정)
+  const userId = document.querySelector('input[name="userId"]')?.value || '';
+
+  // 5️⃣ FormData 객체 생성
   const formData = new FormData();
   formData.append('id', userId);
   formData.append('name', name);
@@ -169,28 +116,50 @@ document.getElementById('saveBtn').addEventListener('click', function () {
   formData.append('skills', JSON.stringify(skills));
   formData.append('projects', JSON.stringify(projects));
 
-  // 프로필 이미지 파일이 있으면 추가
+  // 6️⃣ 프로필 이미지 파일 추가 (있을 때만)
   const profileInput = document.getElementById('profileInput');
-  if (profileInput && profileInput.files.length > 0) {
+  if (profileInput?.files.length > 0) {
     formData.append('profileImage', profileInput.files[0]);
   }
 
-  // 6. AJAX로 서버에 POST
+  // 🔍 디버깅용 콘솔 출력
+  console.log("🟢 userId:", userId);
+  console.log("🟢 name:", name);
+  console.log("🟢 about:", about);
+  console.log("🟢 skills JSON:", JSON.stringify(skills));
+  console.log("🟢 projects JSON:", JSON.stringify(projects));
+  console.log("🟢 profileImage:", profileInput?.files[0] || "없음");
+  for (let [key, value] of formData.entries()) {
+    console.log(`🔸 ${key}:`, value);
+  }
+
+  // 7️⃣ CSRF 토큰/헤더 읽기
+  const csrfToken = document.querySelector('meta[name="_csrf"]')?.content || '';
+  const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
+
+  // 8️⃣ fetch로 FormData 전송 (헤더에 CSRF 토큰 추가!)
   fetch('/savePortfolio', {
     method: 'POST',
-    body: formData
+    body: formData,
+    headers: {
+      [csrfHeader]: csrfToken
+    }
   })
       .then(response => {
-        if (response.redirected) {
-          window.location.href = response.url; // 저장 성공 시 포트폴리오 페이지로 이동
-        } else if (response.ok) {
-          alert('저장 성공!');
-          window.location.href = '/portfolio';
-        } else {
-          alert('저장 실패!');
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('서버 응답 오류');
+      })
+      .then(data => {
+        if (data.status === 'success') {
+          window.location.href = data.redirectUrl;
         }
       })
-      .catch(err => {
-        alert('에러 발생! ' + err);
+      .catch(error => {
+        console.error('❌ 저장 실패:', error);
+        alert('저장 실패: ' + error.message);
       });
 });
+
+

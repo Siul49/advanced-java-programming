@@ -1,7 +1,5 @@
 package com.example.advancedJavaProgramming.controller.auth;
 
-import com.example.advancedJavaProgramming.model.User;
-import com.example.advancedJavaProgramming.repository.UserRepository;
 import com.mongodb.DuplicateKeyException;
 import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.example.advancedJavaProgramming.model.User;
+import com.example.advancedJavaProgramming.repository.UserRepository;
+
 
 @Controller
 public class SignupController {

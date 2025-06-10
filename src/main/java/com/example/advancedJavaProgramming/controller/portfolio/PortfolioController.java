@@ -2,10 +2,13 @@ package com.example.advancedJavaProgramming.controller.portfolio;
 
 import com.example.advancedJavaProgramming.model.Portfolio;
 import com.example.advancedJavaProgramming.repository.UserRepository;
+import com.example.advancedJavaProgramming.service.FileStorageService;
 import com.example.advancedJavaProgramming.service.PortfolioService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,16 +26,19 @@ import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class PortfolioController {
 
     private final PortfolioService portfolioService;
+    private final FileStorageService fileStorageService;
 
     private UserRepository userRepository;
 
-    public PortfolioController(PortfolioService portfolioService) {
+    public PortfolioController(PortfolioService portfolioService, FileStorageService fileStorageService) {
         this.portfolioService = portfolioService;
+        this.fileStorageService = fileStorageService;
     }
 
     @GetMapping("/portfolio")
@@ -40,12 +47,13 @@ public class PortfolioController {
 
         Portfolio portfolio = portfolioService.getPortfolioByEmail(email);
 
+        System.out.println("what are you : " + principal.getName());
+        System.out.println("portfolio : " + portfolio);
+
         if (portfolio == null) {
-            // ✅ 저장된 포트폴리오 없으면 바로 작성 페이지로 리다이렉트
             return "redirect:/writePortfolio";
         }
 
-        // ✅ 있으면 값 채워서 포트폴리오 페이지 렌더링
         model.addAttribute("name", portfolio.getName());
         model.addAttribute("about", portfolio.getAbout());
         model.addAttribute("profileImage", portfolio.getProfileImage());
@@ -53,8 +61,9 @@ public class PortfolioController {
         model.addAttribute("skills", portfolio.getSkills());
         model.addAttribute("userId", portfolio.getUserId());
 
-        return "portfolio"; // Thymeleaf 템플릿 이름
+        return "portfolio";
     }
+
 
     @GetMapping("/writePortfolio")
     public String writePortfolioPage(Model model, Authentication authentication) {
@@ -66,14 +75,13 @@ public class PortfolioController {
         model.addAttribute("projects", null);
         model.addAttribute("skills", null);
 
-        return "writePortfolio"; // 작성/수정 페이지 이름 (같이 쓰는 경우)
+        return "writePortfolio";
     }
 
     @GetMapping("/editPortfolio")
     public String getEditPortfolioPage(@RequestParam("id") String userId, Model model) {
         Portfolio portfolio = portfolioService.getPortfolioByUserId(userId);
 
-        // ✅ 있으면 값으로 채움
         model.addAttribute("name", portfolio.getName());
         model.addAttribute("about", portfolio.getAbout());
         model.addAttribute("profileImage", portfolio.getProfileImage());
@@ -84,8 +92,9 @@ public class PortfolioController {
         return "writePortfolio"; // Thymeleaf 템플릿 이름
     }
 
-    @PostMapping("/savePortfolio")
-    public String savePortfolio(
+    @PostMapping(value = "/savePortfolio", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> savePortfolio(
+            Principal principal, // 여기
             @RequestParam("id") String userId,
             @RequestParam("name") String name,
             @RequestParam("about") String about,
@@ -93,49 +102,59 @@ public class PortfolioController {
             @RequestParam("projects") String projectsJson,
             @RequestParam(value = "profileImage", required = false) MultipartFile profileImageFile
     ) {
+
         try {
-            // ✅ skills, projects JSON 파싱
+            System.out.println("▶️ userId: " + userId);
+            System.out.println("▶️ name: " + name);
+            System.out.println("▶️ about: " + about);
+            System.out.println("▶️ skillsJson: " + skillsJson);
+            System.out.println("▶️ projectsJson: " + projectsJson);
+
+            // 1. JSON 파싱
             ObjectMapper objectMapper = new ObjectMapper();
-            List<Portfolio.Skill> skills = objectMapper.readValue(skillsJson, new TypeReference<List<Portfolio.Skill>>() {});
-            List<Portfolio.Project> projects = objectMapper.readValue(projectsJson, new TypeReference<List<Portfolio.Project>>() {});
+            List<Portfolio.Skill> skills = objectMapper.readValue(skillsJson, new TypeReference<>() {});
+            List<Portfolio.Project> projects = objectMapper.readValue(projectsJson, new TypeReference<>() {});
 
-            // ✅ 프로필 이미지 처리
-            String profileImageFileName = null;
+            // 2. 파일 처리
+            String profileImagePath = null;
             if (profileImageFile != null && !profileImageFile.isEmpty()) {
-                String fileName = profileImageFile.getOriginalFilename();
-                // 서버 경로에 저장 (예시)
-                String uploadDir = "uploads/";
-                File dir = new File(uploadDir);
-                if (!dir.exists()) dir.mkdirs();
-
-                Path filePath = Paths.get(uploadDir + fileName);
-                Files.copy(profileImageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-                profileImageFileName = fileName;
+                profileImagePath =fileStorageService.storeFile(profileImageFile);
             }
 
-            // ✅ Portfolio 객체 만들기
-            Portfolio portfolio = new Portfolio();
-            portfolio.setUserId(userId);
-            portfolio.setName(name);
-            portfolio.setAbout(about);
-            portfolio.setSkills(skills);
-            portfolio.setProjects(projects);
-            if (profileImageFileName != null) {
-                portfolio.setProfileImage(profileImageFileName);
+            // 3. 포트폴리오 객체 생성 및 저장
+            Portfolio portfolio = Portfolio.builder()
+                    .email(principal.getName())
+                    .name(name)
+                    .about(about)
+                    .skills(skills)
+                    .projects(projects)
+                    .profileImage(profileImagePath)
+                    .updatedAt(new Date())
+                    .build();
 
-            }
-            portfolio.setUpdatedAt(new Date());
-
-            // ✅ upsert 동작
             portfolioService.upsertPortfolio(portfolio);
 
-            // 저장 후 포트폴리오 페이지로 리다이렉트
-            return "redirect:/portfolio";
+            // 4. 성공 응답
+            return ResponseEntity.ok().body(Map.of(
+                    "status", "success",
+                    "redirectUrl", "/portfolio"
+            ));
+
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "JSON 파싱 오류",
+                    "message", e.getMessage()
+            ));
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body(Map.of(
+                    "error", "파일 저장 실패",
+                    "message", e.getMessage()
+            ));
         } catch (Exception e) {
-            e.printStackTrace();
-            return "error/500"; // 에러 페이지로
+            return ResponseEntity.internalServerError().body(Map.of(
+                    "error", "서버 오류",
+                    "message", e.getMessage()
+            ));
         }
     }
-
 }

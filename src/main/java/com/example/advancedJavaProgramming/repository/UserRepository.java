@@ -1,6 +1,5 @@
 package com.example.advancedJavaProgramming.repository;
 
-
 import com.example.advancedJavaProgramming.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

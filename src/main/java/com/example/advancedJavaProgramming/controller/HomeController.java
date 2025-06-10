@@ -11,7 +11,7 @@ public class HomeController {
     public String home(Model model) {
         model.addAttribute("title", "공공재 메인페이지");
         model.addAttribute("currentPage", "home");
-        return "main"; // templates/main.html 보여줌
+        return "index";
     }
 
     @GetMapping("/team-recruit")
@@ -32,7 +32,6 @@ public class HomeController {
     public String mainPage(Model model) {
         model.addAttribute("currentPage", "home"); // 현재 페이지 식별자
         model.addAttribute("title", "공공재 메인");
-        return "main";
+        return "index";
     }
-
 }

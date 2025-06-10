@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>공공재 메인페이지</title>
+    <!-- ✅ CSS 경로 (웹 루트 기준) -->
+    <link rel="stylesheet" th:href="@{/css/mainPage.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <!-- ✅ JS 경로 (웹 루트 기준) -->
+    <script defer th:src="@{/js/sidebar.js}"></script>
+    <script defer th:src="@{/js/mainPage.js}"></script>
+</head>
+<body>
+<div class="container">
+    <!-- 비로그인 상태일 때 사이드바 -->
+    <div sec:authorize="isAnonymous()">
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img th:src="@{/images/reallogo.png}" alt="공공재 로고" class="logo" id="mainLogoAnonymous"/>
+            </div>
+            <button class="btn login" id="loginBtn" th:onclick="|location.href='@{/login}'|" >로그인</button>
+            <button class="btn signup" id="signUpBtn"  th:onclick="|location.href='@{/signup}'|">회원가입</button>
+        </aside>
+
+        <main class="main-content">
+            <div class="intro-area">
+                <div class="intro-text">
+                    <h1>같이 도전하는 공모전,<br>공공재와 함께 시작하세요</h1>
+                    <p>팀원 모집, 스터디 구성, 공모전 정보까지.<br>공모전을 시작하는 가장 쉬운 방법, 공공재에서 함께하세요.</p>
+                </div>
+                <div class="main-logo">
+                    <img th:src="@{/images/reallogo.png}" alt="공공재 메인 로고">
+                </div>
+            </div>
+            <div class="buttons">
+                <a class="btn main-btn" id="contestBtn1" th:href="@{/login}">공모전 참여하기</a>
+                <a class="btn main-btn" id="studyBtn1" th:href="@{/login}">스터디 참여하기</a>
+            </div>
+        </main>
+    </div>
+
+    <div sec:authorize="isAuthenticated()">
+        <aside class="sidebar">
+            <div class="logo-area">
+                <a th:href="@{/main}">
+                    <img th:src="@{/images/reallogo.png}" alt="공공재 로고" class="logo" />
+                </a>
+            </div>
+
+            <nav>
+                <ul class="menu">
+                    <li class="active">
+                        <a th:href="@{/main}" class="menu-item">
+                            <div class="left">
+                                <img th:src="@{/images/Home_Blue.png}" class="icon" alt="홈" />
+                                <span>홈</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class="dropdown">
+                        <div class="menu-item dropdown-toggle">
+                            <div class="left">
+                                <img th:src="@{/images/Trophy.png}" class="icon" alt="공모전" />
+                                <a th:href="@{/contest}">공모전 페이지</a>
+                            </div>
+                            <img th:src="@{/images/toggle.png}"
+                                 class="arrow-icon"/>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="menu-item">
+                            <div class="left">
+                                <img th:src="@{/images/human.png}" class="icon" alt="포트폴리오" />
+                                <a th:href="@{/portfolio}">나의 포트폴리오</a>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="dropdown">
+                        <div class="menu-item dropdown-toggle">
+                            <div class="left">
+                                <img th:src="@{/images/Group_human.png}" class="icon" alt="커뮤니티" />
+                                <a th:href="@{/community}">커뮤니티</a>
+                            </div>
+                            <img th:src="@{/images/toggle.png}" class="arrow-icon" />
+                        </div>
+                        <ul class="submenu">
+                            <li>스터디원 모집</li>
+                            <li>Q&amp;A</li>
+                            <li>공모전 후기</li>
+                        </ul>
+                    </li>
+
+
+                </ul>
+            </nav>
+
+            <div class="logout-section">
+                <button class="logout-btn" aria-label="로그아웃">
+                    <img th:src="@{/images/logOut.png}" class="logout-icon" />
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+        <main class="main-content">
+            <div class="intro-area">
+                <div class="intro-text">
+                    <h1>같이 도전하는 공모전,<br>공공재와 함께 시작하세요</h1>
+                    <p>팀원 모집, 스터디 구성, 공모전 정보까지.<br>공모전을 시작하는 가장 쉬운 방법, 공공재에서 함께하세요.</p>
+                </div>
+                <div class="main-logo">
+                    <img th:src="@{/images/reallogo.png}" alt="공공재 메인 로고">
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn main-btn" id="contestBtn" th:onclick="|location.href='@{/login}'|">공모전 참여하기</button>
+                <button class="btn main-btn" id="studyBtn" th:onclick="|location.href='@{/login}'|">스터디 참여하기</button>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>

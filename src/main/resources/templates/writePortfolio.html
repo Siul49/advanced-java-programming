@@ -60,7 +60,7 @@
 
             <section class="project-add-section">
                 <div id="project-card-container">
-                    <div th:if="${projects != null and !projects.isEmpty()}" th:each="project : ${projects}" class="project-added-card show">
+                    <div th:if="${projects != null}" th:each="project : ${projects}" class="project-added-card show">
                         <div class="project-label">
                             <input type="text" class="project-title-input" th:value="${project.title}" />
                             <p class="project-delete">X</p>
