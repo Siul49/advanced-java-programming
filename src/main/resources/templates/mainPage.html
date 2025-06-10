@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>공공재 메인페이지</title>
+    <!-- ✅ CSS 경로 (웹 루트 기준) -->
+    <link rel="stylesheet" th:href="@{/css/mainPage.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <!-- ✅ JS 경로 (웹 루트 기준) -->
+    <script defer th:src="@{/js/sidebar.js}"></script>
+    <script defer th:src="@{/js/mainPage.js}"></script>
+</head>
+<body>
+<div class="container">
+    <!-- 비로그인 상태일 때 사이드바 -->
+    <aside class="sidebar" sec:authorize="isAnonymous()">
+        <div class="logo-area">
+            <img th:src="@{/images/reallogo.png}" alt="공공재 로고" class="logo" id="mainLogoAnonymous"/>
+        </div>
+        <button class="btn login" id="loginBtn">로그인</button>
+        <button class="btn signup" id="signUpBtn">회원가입</button>
+    </aside>
+    <main>
+        <header id="contest_header">
+            <h1>Contest</h1>
+        </header>
+
+        <!-- ✅ 추천 키워드 -->
+        <div th:if="${userKeywords != null and !userKeywords.isEmpty()}" class="user_keywords">
+            <strong>추천 키워드:</strong>
+            <span class="keyword_tag" th:each="keyword : ${userKeywords}" th:text="'#' + ${keyword}"></span>
+        </div>
+
+        <!-- ✅ 추천 공모전 (3개) -->
+        <div class="contest_list">
+            <p th:if="${userKeywords == null or userKeywords.isEmpty()}" style="margin: 20px; font-size: 1.2rem;">공부를 진행해 주세요!</p>
+            <div th:if="${userKeywords != null and !userKeywords.isEmpty()}" th:each="contest : ${recommendedContests}" class="card_wrapper">
+                <div class="card_inner">
+                    <div class="card_front">
+                        <img th:src="@{${contest.img_src}}" alt="포스터" />
+                        <div class="card_tag" th:text="'#' + ${contest.info['분야']}"></div>
+                        <div class="card_title" th:text="${contest.title}"></div>
+                        <div class="card_dday" th:text="'D-' + ${contest.dday}"></div>
+                    </div>
+                    <div class="card_back">
+                        <p th:text="'총 상금: ' + ${contest.prize}"></p>
+                        <p th:text="'지원자격: ' + ${contest.info['응모대상']}"></p>
+                        <p th:text="'주최: ' + ${contest.organizer}"></p>
+                        <p th:text="'조회수: ' + ${contest.read_count}"></p>
+                        <p th:if="${contest.info['홈페이지'] != null}">
+                            <a th:href="${contest.info['홈페이지']}" target="_blank">홈페이지</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ 버튼 그룹 + 검색 입력창 -->
+        <div class="contest_section">
+            <div class="btn_group">
+                <button class="filter_btn" data-filter="all">#전체</button>
+                <button class="filter_btn" data-filter="popular">#인기순</button>
+                <button class="filter_btn" data-filter="recent">#최신순</button>
+                <button class="filter_btn" data-filter="keyword">#키워드</button>
+
+                <div id="keyword_search_box" class="keyword_search_box">
+                    <input type="text" id="keywordInput" placeholder="키워드를 입력하세요">
+                    <button id="searchBtn">검색</button>
+                </div>
+            </div>
+
+            <!-- ✅ 전체 공모전 리스트 -->
+            <div class="contest_list" id="allContestsList">
+                <div th:each="contest : ${contests}" class="card_wrapper">
+                    <div class="card_inner">
+                        <div class="card_front">
+                            <img th:src="@{${contest.img_src}}" alt="포스터" />
+                            <div class="card_tag" th:text="'#' + ${contest.info['분야']}"></div>
+                            <div class="card_title" th:text="${contest.title}"></div>
+                            <div class="card_dday" th:text="'D-' + ${contest.dday}"></div>
+                        </div>
+                        <div class="card_back">
+                            <p th:text="'총 상금: ' + ${contest.prize}"></p>
+                            <p th:text="'지원자격: ' + ${contest.info['응모대상']}"></p>
+                            <p th:text="'주최: ' + ${contest.organizer}"></p>
+                            <p th:text="'조회수: ' + ${contest.read_count}"></p>
+                            <p th:if="${contest.info['홈페이지'] != null}">
+                                <a th:href="${contest.info['홈페이지']}" target="_blank">홈페이지</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
